@@ -1,47 +1,85 @@
-const bcrypt = require('bcrypt');
-//
 const {responseObj} = require('./../config/response');
-//Controller functions
-const {loginUser} = require('./../controller/userController');
-const {getJWT} = require('./../controller/utilFunctions/jwt');
+//Controller
+const {getAll4Admin, findTicket, involveAdmin} = require('./../controller/ticketController');
+const {getAssigned2Admin, loginUser} = require('./../controller/userController');
+//Middlewares
+const {isLoggedIn} = require('./middleware/isLoggedIn');
+const isAdmin = require('./middleware/isAdmin');
 
 
 module.exports = app => {
 
-  // app.post('/login/admin', (req,res) => {
-  //   let userCredentials = req.body.userCredentials;
-  //   if(!userCredentials.emailId)
-  //     res.status(400).json(responseObj(null,'Email ID not provided',400,null));
-  //   else {
-  //     loginUser(userCredentials.emailId)
-  //       .then((user) => {
-  //         if(!user)
-  //           res.status(404).json(responseObj(null,'Email ID not found in the Database',404,null));
-  //         else if(!user.admin){
-  //           res.status(400).json(responseObj(null,'User not an Admin',400,null));
-  //         } else {
-  //           if(!userCredentials.password)
-  //             res.status(400).json(responseObj(null,'Password not provided',400,null));
-  //           else {
-  //             bcrypt.compare(userCredentials.password, user.password, function(err, match) {
-  //               if(err) {
-  //                 res.status(500).json(responseObj(err,'Error in decrypting Password',500,null));
-  //               } else if(match) {
-  //                   let token = getJWT(user.getPayload());
-  //                   let data = user.getPublicFields();
-  //                   data.token = token;
-  //                   res.json(responseObj(null,'Login Successful',200,data));
-  //               } else {
-  //                   res.status(400).json(responseObj(null,'Incorrect Password',400,null));  
-  //               }
-  //             })              
-  //           }
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         res.status(500).json(responseObj(error,'Error in Finding user in DB',500,null));
-  //       })
-  //     }        
-  // })
+//ADMIN can 1) GET ALL THE TICKETS RAISED 
+//          2) GET ALL THE ASSIGNED TICKETS FOR LOGGED IN ADMIN
+//          3) OPEN ANY PARTICULAR TICKET TO VIEW DETAILS
+//        4-5 already covered in User's routes!
+//          4) CHANGE STATUS OF ANY PARTICULAR TICKET
+//          5) ADD COMMENT TO A TICKET
+//          5) SHOULD BE ABLE TO INVOLVE SOME OTHER ADMIN IN A TICKET FOR ASSISTANCE
+//          6) ADMIN CANNOT 'CHANGE STATUS' or 'INVOVLE OTHER ADMIN' without BEING in involvedAdmin list
+// **(COMMENT adds an ADMIN to involvedAdmin list || someother adimn who is already involved can ask for assistance)
+//
+
+  app.get('/admin/allTickets', isLoggedIn, isAdmin, (req, res) => {
+    getAll4Admin()
+      .then(tickets => {
+        res.json(responseObj(null, 'All the tickets in system', 200, tickets));
+      })
+      .catch(error => {
+        res.status(500).json(responseObj(error, 'Error in getting tickets', 500, null));
+      })
+  })
+
+  app.get('/admin/assignedTickets', isLoggedIn, isAdmin, (req, res) => {
+    getAssigned2Admin(req.emailidFROMTOKEN)
+      .then(user => {
+        res.json(responseObj(null, 'All the tickets assigned', 200, user.assignedTickets));
+      })
+      .catch(error => {
+        res.status(500).json(responseObj(error, 'Error in getting assigned tickets', 500, null));
+      })
+  })
+
+  app.get('/admin/ticket/:ticketId', isLoggedIn, isAdmin, (req, res) => {
+    let tId = req.params.ticketId;
+    findTicket(tId)
+      .then(ticket => {
+        if(!ticket)
+          res.status(404).json(responseObj(null, 'Ticket not found in DB', 404, null));
+        else
+          res.json(responseObj(null, 'Ticket found', 200, ticket));
+      })
+      .catch(error => {
+        res.status(500).json(responseObj(error, 'Error in getting tickets', 500, null));
+      })
+  })
+
+  app.post('/admin/involve', isLoggedIn, isAdmin, (req, res) => {
+    let involveAdminEmailId = req.body.emailId;
+    let ticketId = req.body.ticketId;
+    loginUser(involveAdminEmailId)
+      .then(user => {
+        if(!user) {
+          res.status(404).json(responseObj(null, 'Admin not in DB', 404, null));
+        } else if(!user.admin) {
+          res.status(400).json(responseObj(null, 'Cant be involved. Not an Admin!', 400, null));
+        } else {
+          involveAdmin(user, ticketId, req.emailidFROMTOKEN)
+            .then(admin => {
+              res.json(responseObj(null, 'Admin involved', 200, admin));
+            })
+            .catch(error => {
+              res.status(500).json(responseObj(error, 'Admin could not be invloved', 500, null));
+            })
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).json(responseObj(error, 'Error in looking up Admin in DB', 500, null));
+      })
+
+  })
 
 }
+
+//trigger mail on comment functions!.. trigger mail on status change!..

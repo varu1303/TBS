@@ -3,9 +3,6 @@ const Schema = mongoose.Schema;
 //
 const Ticket = require('./ticketSchema');
 //
-const bcrypt = require('bcrypt');
-const saltRounds = 13;
-
 
 const userSchema = new Schema({
   name: {
@@ -41,25 +38,6 @@ const userSchema = new Schema({
   }] 
 });
 
-// Hashes password pre save!
-userSchema.pre('save', function (next) {
-  
-  let u = this;
-  // generate a salt
-  bcrypt.genSalt(saltRounds, function(err, salt) {
-    if (err) return next(err);
-
-    // hash the password along with our new salt
-    bcrypt.hash(u.password, salt, function(err, hash) {
-      if (err) return next(err);
-
-      // override the cleartext password with the hashed one
-      u.password = hash;
-      next();
-    })
-  })
-
-});
 
 // Sending back publicfields on success
 userSchema.methods.getPublicFields = function () {

@@ -58,6 +58,28 @@ module.exports = {
     getRaisedTicket: emailId => {
       return User.findOne({emailId: emailId})
               .populate('raisedTickets');
+    },
+
+    getAssigned2Admin: emailId => {
+      return User.findOne({emailId: emailId})
+              .populate('assignedTickets');
+    },
+
+    refAssignedTicket: (emailId, ticketId) => {
+      return new Promise((resolve, reject) => {
+        User.findOne({emailId: emailId})
+          .then((user) => {
+            t = ObjectId(ticketId);
+            user.assignedTickets.push(t);
+            return user.save();
+          })
+          .then((updatedUser) => {
+            resolve(updatedUser);
+          })
+          .catch((error) => {
+            reject(error);
+          })
+      })      
     }
 
 
