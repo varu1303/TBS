@@ -4,7 +4,7 @@
   "description": "Ticket Based Support",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "sass": "node-sass client/css/scss/main.scss client/css/style.css -w"
   },
   "author": "Varun",
   "license": "ISC",
@@ -15,5 +15,8 @@
     "jsonwebtoken": "^8.1.0",
     "mongoose": "^4.13.7",
     "nodemailer": "^4.4.1"
+  },
+  "devDependencies": {
+    "node-sass": "^4.7.2"
   }
 }

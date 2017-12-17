@@ -26,6 +26,10 @@ module.exports = {
     return Ticket.findById(tId); 
   },
 
+  findTicketByNo: tNo => {
+    return Ticket.findOne({ticketNo: tNo});
+  },
+
   changeTicketStatus: (ticket, open) => {
     ticket.status = open;
     return ticket.save();
@@ -82,7 +86,7 @@ module.exports = {
       Ticket.findById(ticket)
         .then(ticket => {
           if(!ticket) {
-            reject('Ticket not found');
+            reject(404);
           } else {
             let requesterInvolved = false;
             let involved = false;
@@ -114,7 +118,7 @@ module.exports = {
                 reject(error);
               })  
             } else if (!requesterInvolved) {
-              reject('Reqester not involved in the ticket so cannot ask for assistance');
+              reject(400);
             }
             else {
               resolve(admin);

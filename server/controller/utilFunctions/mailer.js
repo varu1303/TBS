@@ -40,6 +40,84 @@ module.exports = {
     });
 
 
+  },
+
+  statusUpdateMail: (t, open, by, byEmail) => {
+    let text;
+    let action;
+    let to = [];
+
+    if (open) {
+      text = `${t.ticketNo} re-opened by ${by}`;
+      action = 'REOPENED';
+    } else {
+      text = `${t.ticketNo} closed by ${by}`;
+      action = 'CLOSED';
+    }
+
+    if (byEmail == t.raisedBy.emailId) {
+      t.involvedAdmins.forEach( (val, i) => {
+        to.push(val.emailId);
+      })
+    } else {
+      to.push(t.raisedBy.emailId)
+      t.involvedAdmins.forEach( (val, i) => {
+        if(val.emailId != byEmail)
+          to.push(val.emailId);
+      })      
+    }
+
+
+    let mailOptions = {
+      from: emailId, // sender address
+      to: to, // list of receivers
+      subject: `${t.ticketNo} : ${action}`, // Subject line
+      text: text 
+    };
+
+    transporter.sendMail(mailOptions);
+  },
+
+  commentMail: (t, by, byEmail) => {
+
+    let text = `A new comment on ${t.ticketNo} by ${by}`;
+    let to = [];
+
+    if (byEmail == t.raisedBy.emailId) {
+      t.involvedAdmins.forEach( (val, i) => {
+        to.push(val.emailId);
+      })
+    } else {
+      to.push(t.raisedBy.emailId)
+      t.involvedAdmins.forEach( (val, i) => {
+        if(val.emailId != byEmail)
+          to.push(val.emailId);
+      })      
+    }
+
+    let mailOptions = {
+      from: emailId, // sender address
+      to: to, // list of receivers
+      subject: `${t.ticketNo} : got a response.`, // Subject line
+      text: text 
+    };
+
+    // transporter.sendMail(mailOptions);    
+  },
+
+  assignedMail: (tNo, to, by, byEmail) => {
+
+    let text = `A new ticket has been assigned to you : ${tNo} by ${by} - ${byEmail}`;
+
+
+    let mailOptions = {
+      from: emailId, // sender address
+      to: to, // list of receivers
+      subject: `${tNo} : ASSIGNED`, // Subject line
+      text: text 
+    };
+
+    // transporter.sendMail(mailOptions);    
   }
 
 }

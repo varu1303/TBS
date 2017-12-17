@@ -6,7 +6,7 @@ const {saveUser, loginUser, updPassword, refRaisedTicket, getRaisedTicket} = req
 const {saveTicket, findTicket, changeTicketStatus, postComment, getTicketCount} = require('./../controller/ticketController');
 const {generateJWT} = require('./../controller/utilFunctions/jwt');
 const createNewPassword = require('./../controller/utilFunctions/randomString');
-const {sendPassMail} = require('./../controller/utilFunctions/mailer');
+const {sendPassMail, statusUpdateMail, commentMail} = require('./../controller/utilFunctions/mailer');
 //Middlewares
 const {isLoggedIn} = require('./middleware/isLoggedIn');
 const {createHash, createHashFunction} = require('./middleware/hashPass');
@@ -130,7 +130,7 @@ module.exports = app => {
         let n= getTicketCount()
         .then(c => {
           let n = Math.ceil(Math.random()* 100);
-          ticketDetail.ticketNo = 'Tick'+ n;
+          ticketDetail.ticketNo = 'Tick00'+ n;
           ticketDetail.ticketNo += c;
           let by = {};
           by.Name = req.nameFROMTOKEN;
@@ -222,8 +222,10 @@ module.exports = app => {
             res.status(404).json(responseObj(null, 'Ticket not present in DB', 404, null))
           else if(ticket == 401)
             res.status(401).json(responseObj(null,'Not authorised to change status either has to be owner of that ticket or an involved Admin',401,null));
-          else
+          else {
             res.json(responseObj(null, 'Updated ticket status', 200, ticket));
+            statusUpdateMail(ticket, open, req.nameFROMTOKEN, req.emailidFROMTOKEN);
+          }
         })
         .catch((error) => {
           res.status(500).json(responseObj(error,'error in getting the ticket',500,null));
@@ -253,8 +255,10 @@ module.exports = app => {
             res.status(404).json(responseObj(null, 'Ticket not present in DB', 404, null));
           else if(ticket == 401)
             res.status(401).json(responseObj(null,'Not authorised to add comment either has to be owner of that ticket or an Admin',401,null));    
-          else 
+          else {
             res.json(responseObj(null, 'Added comment', 200, ticket));
+            commentMail(ticket, req.nameFROMTOKEN, req.emailidFROMTOKEN);
+          }
         })
         .catch((error) => {
           res.status(500).json(responseObj(error,'error in adding comment',500,null));

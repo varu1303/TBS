@@ -1,7 +1,8 @@
 const {responseObj} = require('./../config/response');
 //Controller
-const {getAll4Admin, findTicket, involveAdmin} = require('./../controller/ticketController');
+const {getAll4Admin, findTicket, involveAdmin, findTicketByNo} = require('./../controller/ticketController');
 const {getAssigned2Admin, loginUser} = require('./../controller/userController');
+const {assignedMail} = require('./../controller/utilFunctions/mailer');
 //Middlewares
 const {isLoggedIn} = require('./middleware/isLoggedIn');
 const isAdmin = require('./middleware/isAdmin');
@@ -17,7 +18,8 @@ module.exports = app => {
 //          5) ADD COMMENT TO A TICKET
 //          5) SHOULD BE ABLE TO INVOLVE SOME OTHER ADMIN IN A TICKET FOR ASSISTANCE
 //          6) ADMIN CANNOT 'CHANGE STATUS' or 'INVOVLE OTHER ADMIN' without BEING in involvedAdmin list
-// **(COMMENT adds an ADMIN to involvedAdmin list || someother adimn who is already involved can ask for assistance)
+// **(COMMENT adds an ADMIN to involvedAdmin list || someother adimn who is already involved can also add an admin)
+//          7) FIND TICKET BY TICKET NUMBER
 //
 
   app.get('/admin/allTickets', isLoggedIn, isAdmin, (req, res) => {
@@ -56,7 +58,8 @@ module.exports = app => {
 
   app.post('/admin/involve', isLoggedIn, isAdmin, (req, res) => {
     let involveAdminEmailId = req.body.emailId;
-    let ticketId = req.body.ticketId;
+    let ticketId = req.body.ticket.ticketId;
+    let ticketNo = req.body.ticket.ticketNo;
     loginUser(involveAdminEmailId)
       .then(user => {
         if(!user) {
@@ -66,10 +69,16 @@ module.exports = app => {
         } else {
           involveAdmin(user, ticketId, req.emailidFROMTOKEN)
             .then(admin => {
-              res.json(responseObj(null, 'Admin involved', 200, admin));
+              res.json(responseObj(null, 'Admin involved', 200, admin.getPublicFiels()));
+              assignedMail(ticketNo, involveAdminEmailId, req.nameFROMTOKEN, req.emailidFROMTOKEN);
             })
             .catch(error => {
-              res.status(500).json(responseObj(error, 'Admin could not be invloved', 500, null));
+              if(error == 404)
+                res.status(404).json(responseObj('Ticket not found in DB', 'Admin could not be invloved', 500, null));
+              else if (error == 400)
+                res.status(400).json(responseObj('Reqester not involved in the ticket so cannot ask for assistance', 'Admin could not be invloved', 500, null));
+              else
+                res.status(500).json(responseObj(error, 'Admin could not be invloved', 500, null));
             })
         }
       })
@@ -80,6 +89,19 @@ module.exports = app => {
 
   })
 
-}
+  app.get('/admin/ticketNo/:ticketNo', isLoggedIn, isAdmin, (req, res) => {
+    let tNo = req.params.ticketNo;
+    findTicketByNo(tNo)
+      .then(ticket => {
+        if(!ticket)
+          res.status(404).json(responseObj(null, 'Ticket not found in DB', 404, null));
+        else
+          res.json(responseObj(null, 'Ticket found', 200, ticket));
+      })
+      .catch(error => {
+        res.status(500).json(responseObj(error, 'Error in getting tickets', 500, null));
+      })
+  })
 
-//trigger mail on comment functions!.. trigger mail on status change!..
+
+}

@@ -1,0 +1,59 @@
+<div class="sign_container">
+  <div class="sign_box">
+
+    <div class="form_box">
+      <div class="form_side1" ng-show="Sign.active=='login'">
+        <p><input type="email" placeholder="Email ID"></p>
+        <p><input type="password" placeholder="Password"></p>
+        <p><button>LOGIN</button></p>
+        <p><a href="/forgotPass">FORGOT PASSWORD?</a></p>
+      </div>
+      <div class="form_side2" ng-show="Sign.active=='register'">
+          <p><input type="text" placeholder="Name"></p>
+          <p><input type="email" placeholder="Email ID"></p>
+          <p><input type="tel" placeholder="Phone Number"></p>
+          <p><input type="password" placeholder="Password"></p>
+          <p><input type="password" placeholder="Confirm Password"></p>
+          <p><button>REGISTER</button></p>
+      </div>
+    </div>
+
+    <div class="bottom_tab">
+      <p>
+        <a href="#" ng-click="Sign.tab('login')" ng-class="{in: Sign.active == 'login', up: Sign.active == 'register'}">
+          LOGIN
+        </a>
+      </p>
+      <p>
+        <a href="#" ng-click="Sign.tab('register')" ng-class="{in: Sign.active == 'register', up: Sign.active == 'login'}">
+          REGISTER
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer>
+    <div class="row">
+      <div class="col-sm-6 col-xs-12">
+        <div class="center_box">
+          <h2>LOCATION</h2>
+          <p>ISH BUILDING, HINJEWADI</p>
+          <p>PUNE, MAHARASHTRA</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xs-12">
+        <div class="center_box">
+          <h2>AROUND THE WEB</h2>
+          <ul id="web_icon">
+            <li><a href="#"><span class="fa-stack fa-lg"><i class="fa fa-twitter fa-2x" aria-hidden="true"></i></span></a></li>
+            <li id="mid"><a href="#"><span class="fa-stack fa-lg"><i class="fa fa-facebook fs-2x" aria-hidden="true"></i></span></a></li>
+            <li><a href="#"><span class="fa-stack fa-lg"><i class="fa fa-globe fa-2x" aria-hidden="true"></i></span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer_foot">
+      <p>Copyright &copy; edDesk 2017</p>
+    </div>
+  </footer>
