@@ -6,11 +6,10 @@ angular.module('edApp',['ngRoute','ngAnimate'])
 function MainController($location) {
 
   let mc = this;
-  mc.currentLoc = $location.path();
 
-  mc.newLoc = function (loc) {
-    mc.currentLoc = loc;
-  }
+  // mc.newLoc = function (loc) {
+  //   mc.currentLoc = loc;
+  // }
 
 
 

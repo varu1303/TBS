@@ -18,8 +18,12 @@
 .form_side1 {
   width: 90%;
   margin: 0 auto;
-  margin-top: 15rem;
+  margin-top: 10rem;
   color: black;
+}
+
+.alert {
+  margin: 0 auto;
 }
 
 .form_side1 input, .form_side2 input {
@@ -44,9 +48,12 @@
   transition: all .1s;
 }
 
-.form_side1 p a:hover, .form_side1 p a:active {
-  border: none;
-  transform: scale(1.2);
+.form_side1 p a:hover {
+  transform: scale(1.1);
+}
+
+.form_side1 p a:active {
+  transform: scale(1);  
 }
 
 .form_side1 button, .form_side2 button {
@@ -57,7 +64,7 @@
   margin: 1rem 0;
   border-radius: 4px;
   cursor: pointer;
-  transition: transform .2s ease-in-out;
+  transition: transform .1s ease-in-out;
 }
 
 .form_side1 button:hover, .form_side2 button:hover {
@@ -65,7 +72,7 @@
 }
 
 .form_side1 button:active, .form_side2 button:active {
-  transform: scale(1.2)  
+  transform: scale(1);
 }
 
 .form_side2 {
@@ -114,6 +121,14 @@
 
 .up {
   color:#2C3E50 !important;
+}
+
+@media only screen and (min-width: 767px) {
+  .alert {
+    width: 70%;
+    text-align: center;
+    font-weight: 700;
+  }
 }
 
 

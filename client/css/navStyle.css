@@ -40,10 +40,6 @@ nav ul {
   flex:1;
 }
 
-.stretch a {
-  width: 15rem;
-}
-
 nav ul li a:link {
   display: block;
   color: #FFFFFF;
@@ -104,9 +100,9 @@ nav ul li a:active {
   list-style: none;
 }
 
-#borTop {
+/* #borTop {
   border-top: 2px solid #FFF;
-}
+} */
 
 .smNav ul li a:link {
   display: block;
@@ -136,6 +132,12 @@ nav ul li a:active {
     html {
         font-size: 60%;
     }
+}
+
+@media only screen and (min-width: 768px) {
+  .stretch a {
+    width: max-content;
+  }
 }
 
 @media only screen and (max-width: 767px) {

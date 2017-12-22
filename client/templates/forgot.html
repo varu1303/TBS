@@ -1,10 +1,15 @@
 <div class="email_container">
   <div class="email_box">
     <h2>Enter your e-mail to receive a new password</h2>
+    <form name="forgot_form" ng-submit="Forgot.forgotSubmit(forgot_form.$invalid)" novalidate>
     <p>
-        <input type="text" placeholder="Email ID">
-        <button>SUBMIT</button>
+        <input type="email" placeholder="Email ID" name="email" ng-model="Forgot.emailId" required>
+        <button type="submit">SUBMIT</button>
     </p>
+    </form>
+    <div  ng-show="Forgot.forgetSubmit && forgot_form.$invalid" class="alert alert-warning">
+        Enter a valid Email Id!
+    </div>
   </div>
 </div>
 <footer>

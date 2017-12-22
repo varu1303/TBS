@@ -20,6 +20,10 @@
     <link rel="stylesheet" href="css/aboutStyle.css">
     <link rel="stylesheet" href="css/signStyle.css">
     <link rel="stylesheet" href="css/forgotStyle.css">
+    <link rel="stylesheet" href="css/meStyle.css">
+    <link rel="stylesheet" href="css/ticketStyle.css">
+    <link rel="stylesheet" href="css/raiseStyle.css">
+    <link rel="stylesheet" href="css/dashStyle.css">
 
   </head>
   <body ng-controller="MainController as Main" ng-cloak>
@@ -27,35 +31,41 @@
   <!-- NAVBAR -->
     <nav>
       <ul>
-        <li id="tag" ng-click="Main.newLoc('/')"><a href="/" class="constant">edDESK</a></li>
-        <li class="stretch" ng-click="Main.newLoc('/dashboard')">
-          <a href="/dashboard" ng-class="{'active': Main.currentLoc == '/dashboard'}">DASHBOARD</a>
+        <li id="tag"><a href="/" class="constant">edDESK</a></li>
+        <li ng-show="!notLogged" class="stretch">
+          <a href="/me" ng-class="{'active': highlight == '/me' || highlight.substring(0, 11) == '/viewTicket'}">{{name | uppercase}}</a>
         </li>
-        <li ng-click="Main.newLoc('/me')">
-          <a href="/me" ng-class="{'active': Main.currentLoc == '/me'}">ME</a>
+        <li ng-show="!notLogged && isAdmin">
+          <a href="/dashboard" ng-class="{'active': highlight == '/dashboard'}">DASHBOARD</a>
         </li>
-        <li ng-click="Main.newLoc('/aboutEd')">
-          <a href="/aboutEd" ng-class="{'active': Main.currentLoc == '/aboutEd'}">ABOUT</a>
+        <li ng-show="!notLogged && !isAdmin">
+          <a href="/tickForm" ng-class="{'active': highlight == '/tickForm'}">PROBLEM?</a>
         </li>
-        <li ng-click="Main.newLoc('/logout')">
-          <a href="/logout" ng-class="{'active': Main.currentLoc == '/logout'}">LOGOUT</a>
+        <li ng-show="notLogged" class="stretch">
+          <a href="/aboutEd" ng-class="{'active': highlight == '/aboutEd'}">ABOUT US</a>
+        </li>
+        <li ng-show="!notLogged">
+          <a href="/logout" ng-class="{'active': highlight == '/logout'}">LOGOUT</a>
         </li>
       </ul>
     </nav>
     <i class="fa fa-bars fa-2x" id="icon" aria-hidden="true"></i>
     <div class="smNav">
       <ul>
-        <li id="bortop" ng-click="Main.newLoc('/dashboard')">
-          <a href="/dashboard" ng-class="{'active--sm': Main.currentLoc == '/dashboard'}">DASHBOARD</a>
+        <li ng-show="!notLogged">
+          <a href="/me" ng-class="{'active--sm': highlight == '/me' || highlight.substring(0, 11) == '/viewTicket'}">{{name | uppercase}}</a>
         </li>
-        <li ng-click="Main.newLoc('/me')">
-          <a href="/me" ng-class="{'active--sm': Main.currentLoc == '/me'}">ME</a>
+        <li ng-show="!notLogged && isAdmin">
+          <a href="/dashboard" ng-class="{'active--sm': highlight == '/dashboard'}">DASHBOARD</a>
         </li>
-        <li ng-click="Main.newLoc('/aboutEd')">
-          <a href="/aboutEd" ng-class="{'active--sm': Main.currentLoc == '/aboutEd'}">ABOUT</a>
+        <li ng-show="!notLogged && !isAdmin">
+          <a href="/tickForm" ng-class="{'active--sm': highlight == '/tickForm'}">PROBLEM?</a>
         </li>
-        <li ng-click="Main.newLoc('/logout')">
-          <a href="/logout" ng-class="{'active--sm': Main.currentLoc == '/logout'}">LOGOUT</a>
+        <li ng-show="notLogged">
+          <a href="/aboutEd" ng-class="{'active--sm': highlight == '/aboutEd'}">ABOUT US</a>
+        </li>
+        <li ng-show="!notLogged">
+          <a href="/logout" ng-class="{'active--sm': highlight == '/logout'}">LOGOUT</a>
         </li>
       </ul>      
     </div>
@@ -93,10 +103,15 @@
     <script src="angular/route-angular.js"></script>
     <script src="angular/controllers/signCtrl.js"></script>
     <script src="angular/controllers/dashCtrl.js"></script>
+    <script src="angular/controllers/raiseCtrl.js"></script>
     <script src="angular/controllers/meCtrl.js"></script>
     <script src="angular/controllers/aboutCtrl.js"></script>
     <script src="angular/controllers/logoutCtrl.js"></script>
     <script src="angular/controllers/forgotCtrl.js"></script>
     <script src="angular/controllers/ticketCtrl.js"></script>
+    <script src="angular/services/httpRequest.js"></script>
+    <script src="angular/services/tokenService.js"></script>
+    <script src="angular/services/reverseFilter.js"></script>
+    <script src="angular/services/timeStamp.js"></script>
   </body>
 </html>

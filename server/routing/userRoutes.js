@@ -155,7 +155,7 @@ module.exports = app => {
 
     })
 
-    app.get('/allTicket', isLoggedIn, (req, res) => {
+    app.get('/allTicketRaised', isLoggedIn, (req, res) => {
       getRaisedTicket(req.emailidFROMTOKEN)
         .then((user) => {
           data = user.getPublicFields();
@@ -243,7 +243,9 @@ module.exports = app => {
           if(!ticket) {
             return 404;
           } else {
-            if(ticket.raisedBy.emailId == req.emailidFROMTOKEN || req.isAdminFROMTOKEN) {
+            if (!ticket.status) {
+              return(400);
+            } else if(ticket.raisedBy.emailId == req.emailidFROMTOKEN || req.isAdminFROMTOKEN) {
               return postComment(ticket, comment, req.isAdminFROMTOKEN, req.nameFROMTOKEN, req.emailidFROMTOKEN);
             } else {
               return 401;
@@ -251,7 +253,9 @@ module.exports = app => {
           }
         })
         .then(ticket => {
-          if(ticket == 404)
+          if (ticket == 400) 
+            res.status(404).json(responseObj(null, 'Ticket is closed cannot add comments', 400, null));
+          else if(ticket == 404)
             res.status(404).json(responseObj(null, 'Ticket not present in DB', 404, null));
           else if(ticket == 401)
             res.status(401).json(responseObj(null,'Not authorised to add comment either has to be owner of that ticket or an Admin',401,null));    

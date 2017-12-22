@@ -3,29 +3,61 @@
 
     <div class="form_box">
       <div class="form_side1" ng-show="Sign.active=='login'">
-        <p><input type="email" placeholder="Email ID"></p>
-        <p><input type="password" placeholder="Password"></p>
-        <p><button>LOGIN</button></p>
+        <form name="log_form" ng-submit="Sign.logSubmit(log_form.$invalid)" novalidate>
+          <p><input type="email" name= "email" placeholder="Email ID" ng-model="Sign.logId" required></p>
+          <div  ng-show="log_form.email.$invalid && Sign.subDone" class="alert alert-warning">
+            Please enter a valid email id!
+          </div>
+          <!-- {{log_form.$invalid}} -->
+          <p><input type="password" placeholder="Password" name="password" ng-model="Sign.logPass" required></p>
+          <div  ng-show="(log_form.email.$error.required || log_form.password.$error.required) && Sign.subDone" class="alert alert-warning">
+              Email ID and Password are required!
+          </div>
+          <p><button type="submit">LOGIN</button></p>
+        </form>
         <p><a href="/forgotPass">FORGOT PASSWORD?</a></p>
       </div>
       <div class="form_side2" ng-show="Sign.active=='register'">
-          <p><input type="text" placeholder="Name"></p>
-          <p><input type="email" placeholder="Email ID"></p>
-          <p><input type="tel" placeholder="Phone Number"></p>
-          <p><input type="password" placeholder="Password"></p>
-          <p><input type="password" placeholder="Confirm Password"></p>
-          <p><button>REGISTER</button></p>
+        <form name="register_form" ng-submit="Sign.regSubmit(register_form.$invalid)" novalidate>
+          <p><input type="text" placeholder="Name" name="name" ng-model="Sign.upName" required></p>
+          <p><input type="email" placeholder="Email ID" name="email" ng-model="Sign.upId" required></p>
+          <div  ng-show="register_form.email.$invalid && Sign.regDone && Sign.upId != ''" class="alert alert-warning">
+              Please enter a valid email id!
+          </div>
+          <p><input type="tel" placeholder="Phone Number" name="phoneNumber" ng-model="Sign.upNumber" ng-minlength="10" ng-maxlength="10" required></p>
+          <div  ng-show="(register_form.phoneNumber.$error.minlength || 
+          register_form.phoneNumber.$error.maxlength) && Sign.regDone" class="alert alert-warning">
+            Enter a valid 10 digit phone Number!
+          </div>
+          <p><input type="password" placeholder="Password" name="password" ng-model="Sign.upPass" ng-minlength="6" ng-maxlength="10" required></p>
+          <div  ng-show="(register_form.password.$error.minlength || 
+          register_form.password.$error.maxlength) && Sign.regDone" class="alert alert-warning">
+            Password should be 6 to 10 characters long!
+          </div>
+          <p><input type="password" placeholder="Confirm Password" name="conPass" ng-model="Sign.upConPass" required></p>
+          <div  ng-show="Sign.regNoMatch" class="alert alert-warning">
+              Passwords do not match!
+          </div>
+          <div  ng-show="(register_form.email.$error.required || 
+                          register_form.password.$error.required || 
+                          register_form.name.$error.required ||
+                          register_form.phoneNumber.$error.required ||
+                          register_form.conPass.$error.required) && Sign.regDone" class="alert alert-warning">
+              All fields are mandatory!
+          </div>
+          <p><button type="submit">REGISTER</button></p>
+        </form>
       </div>
     </div>
 
     <div class="bottom_tab">
       <p>
-        <a href="#" ng-click="Sign.tab('login')" ng-class="{in: Sign.active == 'login', up: Sign.active == 'register'}">
+        <a id="goLogin" href="#" ng-click="Sign.tab('login')" ng-class="{in: Sign.active == 'login', up: Sign.active == 'register'}">
           LOGIN
         </a>
       </p>
       <p>
-        <a href="#" ng-click="Sign.tab('register')" ng-class="{in: Sign.active == 'register', up: Sign.active == 'login'}">
+        <a id="goRegister" href="#" ng-click="Sign.tab('register')" ng-class="{in: Sign.active == 'register', up: Sign.active == 'login'}">
           REGISTER
         </a>
       </p>

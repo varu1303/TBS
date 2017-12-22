@@ -1,5 +1,56 @@
-<div class="dash"><h1>Dash html</h1>
+<div class="container dash_box">
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <p class="icons">TOTAL TICKETS: {{Dash.allRaisedTicket}}</p>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+      <p class="icons">OPEN TICKETS: {{Dash.allOpenTicket}}</p>
+    </div>
+  </div>
 
-<p> For an ADMIN we will have all the raised tickets etc here </p>
-<p>For user we will have raise ticket platform</p>
+  
+  <div class="row tick_row" ng-repeat="ticket in Dash.allTicketRaised | reverse | limitTo: Dash.limit">
+    <div class="col-xs-12 ticket_box">
+      <div class="flex_contain">
+        <p class="flex_describe">
+          {{ticket.ticketNo}} : {{ticket.ticketTitle}}
+          <br>
+          Raised by {{ticket.raisedBy.name}} on {{ticket.date | date: "MMM d, y h:mm:ss a"}}
+        </p>
+        <p class="flex_status" ng-class="{op: ticket.status == true, cl: ticket.status == false}">
+          &nbsp; <br> &nbsp;
+        </p>
+      </div>
+      <div id="counter">
+        {{$index + 1}}    
+      </div>
+    </div>
+    <div class="hidden-xs col-sm-3">
+      &nbsp;
+    </div>
+    <div class="col-xs-12 col-sm-6">
+      <p class="dToView" ng-click="Dash.viewTicket(ticket._id)">
+        VIEW      
+      </p>
+    </div>
+    <div class="hidden-xs col-sm-3">
+      &nbsp;
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="hidden-xs col-sm-2">
+      &nbsp;
+    </div>
+    <div class="col-xs-12 col-sm-8">
+      <p id="load" ng-click="Dash.loadMore()" ng-hide="Dash.allTicketRaised.length <= Dash.limit">
+        LOAD MORE      
+      </p>
+    </div>
+    <div class="hidden-xs col-sm-2">
+      &nbsp;
+    </div>
+  </div>
 </div>
+
+

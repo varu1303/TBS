@@ -50,7 +50,7 @@
   margin: 1rem 0;
   border-radius: 4px;
   cursor: pointer;
-  transition: transform .2s ease-in-out;
+  transition: transform .1s ease-in-out;
 }
 
 .email_box  p button:hover {
@@ -58,7 +58,7 @@
 }
 
 .email_box  p button:active {
-  transform: scale(1.2);
+  transform: scale(1);
 }
 
 @media only screen and (max-width: 767px) {
