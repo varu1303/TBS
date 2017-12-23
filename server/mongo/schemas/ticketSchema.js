@@ -24,6 +24,11 @@ const ticketSchema = new Schema({
     type: Boolean,
     default: true
   },
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5
+  },
   involvedAdmins: [{
     name: String,
     emailId: String

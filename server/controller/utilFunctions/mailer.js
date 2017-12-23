@@ -67,15 +67,17 @@ module.exports = {
       })      
     }
 
+    if (to.length != 0) {
+      let mailOptions = {
+        from: emailId, // sender address
+        to: to, // list of receivers
+        subject: `${t.ticketNo} : ${action}`, // Subject line
+        text: text 
+      };
+  
+      transporter.sendMail(mailOptions);
+    }
 
-    let mailOptions = {
-      from: emailId, // sender address
-      to: to, // list of receivers
-      subject: `${t.ticketNo} : ${action}`, // Subject line
-      text: text 
-    };
-
-    transporter.sendMail(mailOptions);
   },
 
   commentMail: (t, by, byEmail) => {
@@ -95,14 +97,18 @@ module.exports = {
       })      
     }
 
-    let mailOptions = {
-      from: emailId, // sender address
-      to: to, // list of receivers
-      subject: `${t.ticketNo} : got a response.`, // Subject line
-      text: text 
-    };
+    if(to.length != 0) {
+      let mailOptions = {
+        from: emailId, // sender address
+        to: to, // list of receivers
+        subject: `${t.ticketNo} : got a response.`, // Subject line
+        text: text 
+      };
+  
+      // transporter.sendMail(mailOptions); 
+    }
 
-    // transporter.sendMail(mailOptions);    
+   
   },
 
   assignedMail: (tNo, to, by, byEmail) => {

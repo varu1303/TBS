@@ -129,6 +129,11 @@ module.exports = {
           reject(error);
         })
     })
+  },
+
+  giveRating: (ticket, rating) => {
+    ticket.rating = rating;
+    return ticket.save();
   }
  
 }

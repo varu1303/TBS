@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const {responseObj} = require('./../config/response');
 //Controller functions
 const {saveUser, loginUser, updPassword, refRaisedTicket, getRaisedTicket} = require('./../controller/userController');
-const {saveTicket, findTicket, changeTicketStatus, postComment, getTicketCount} = require('./../controller/ticketController');
+const {saveTicket, findTicket, changeTicketStatus, postComment, getTicketCount, giveRating} = require('./../controller/ticketController');
 const {generateJWT} = require('./../controller/utilFunctions/jwt');
 const createNewPassword = require('./../controller/utilFunctions/randomString');
 const {sendPassMail, statusUpdateMail, commentMail} = require('./../controller/utilFunctions/mailer');
@@ -25,6 +25,8 @@ module.exports = app => {
     /**(8-9) Ticket picked from Ticket's collection only if 'raisedby' matches with the token's data or an Admin**/
 //          8) OPEN/CLOSE THAT TICKET
 //          9) POST COMMENT ON THAT TICKET
+//         10) REFRESH COMMENTS (GET COMMENTS)
+//         11) RATE EXPERIENCE FOR A TICKET
          
         
 
@@ -268,6 +270,61 @@ module.exports = app => {
           res.status(500).json(responseObj(error,'error in adding comment',500,null));
         })
            
+    })
+
+    app.get('/ticketComment/:ticketId', isLoggedIn, (req, res) => {
+      let tId = req.params.ticketId;
+    
+      findTicket(tId)
+        .then(ticket => {
+          if(!ticket) {
+            res.status(404).json(responseObj(null, 'Ticket not found', 404, null));
+          } else if( ticket.raisedBy.emailId != req.emailidFROMTOKEN && !req.isAdminFROMTOKEN) {
+            res.status(401).json(responseObj(null, 'Not authorised to get comments for this ticket', 401, null));
+          } else {
+            res.json(responseObj(null, 'Updated comments of this ticket', 200, ticket.chat));
+          }
+        })
+        .catch((error) => {
+          res.status(500).json(responseObj(error,'error in getting comment',500,null));
+        })
+
+    })
+
+    app.put('/ticketRating/:ticketId', isLoggedIn, (req, res) => {
+      let tId = req.params.ticketId;
+      let rating = Number(req.body.rating);
+
+      findTicket(tId)
+        .then(ticket => {
+          if(!ticket) {
+            return 404;
+          } else {
+            if (ticket.status) {
+              return(400);
+            } else if(ticket.raisedBy.emailId == req.emailidFROMTOKEN) {
+              return giveRating(ticket, rating);
+            } else {
+              return 401;
+            }
+          }
+        })
+        .then(ticket => {
+          if (ticket == 400) 
+            res.status(404).json(responseObj(null, 'Ticket is open cannot give rating', 400, null));
+          else if(ticket == 404)
+            res.status(404).json(responseObj(null, 'Ticket not present in DB', 404, null));
+          else if(ticket == 401)
+            res.status(401).json(responseObj(null, 'Not authorised to give rating to this ticket- only owner can', 401, null));    
+          else {
+            res.json(responseObj(null, 'Added rating', 200, ticket));
+            // commentMail(ticket, req.nameFROMTOKEN, req.emailidFROMTOKEN);
+          }
+        })
+        .catch((error) => {
+          res.status(500).json(responseObj(error, 'error in giving rating', 500, null));
+        })
+
     })
 
 

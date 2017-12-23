@@ -1,7 +1,7 @@
 const {responseObj} = require('./../config/response');
 //Controller
 const {getAll4Admin, findTicket, involveAdmin, findTicketByNo} = require('./../controller/ticketController');
-const {getAssigned2Admin, loginUser} = require('./../controller/userController');
+const {getAssigned2Admin, loginUser, findAdmins} = require('./../controller/userController');
 const {assignedMail} = require('./../controller/utilFunctions/mailer');
 //Middlewares
 const {isLoggedIn} = require('./middleware/isLoggedIn');
@@ -16,11 +16,11 @@ module.exports = app => {
 //        4-5 already covered in User's routes!
 //          4) CHANGE STATUS OF ANY PARTICULAR TICKET
 //          5) ADD COMMENT TO A TICKET
-//          5) SHOULD BE ABLE TO INVOLVE SOME OTHER ADMIN IN A TICKET FOR ASSISTANCE
-//          6) ADMIN CANNOT 'CHANGE STATUS' or 'INVOVLE OTHER ADMIN' without BEING in involvedAdmin list
+//          6) SHOULD BE ABLE TO INVOLVE SOME OTHER ADMIN IN A TICKET FOR ASSISTANCE
+//          7) ADMIN CANNOT 'CHANGE STATUS' or 'INVOVLE OTHER ADMIN' without BEING in involvedAdmin list
 // **(COMMENT adds an ADMIN to involvedAdmin list || someother adimn who is already involved can also add an admin)
-//          7) FIND TICKET BY TICKET NUMBER
-//
+//          8) FIND TICKET BY TICKET NUMBER
+//          9) GETTING ALL THE ADMINS IN THE SYSTEM
 
   app.get('/admin/allTickets', isLoggedIn, isAdmin, (req, res) => {
     getAll4Admin()
@@ -57,6 +57,7 @@ module.exports = app => {
   })
 
   app.post('/admin/involve', isLoggedIn, isAdmin, (req, res) => {
+
     let involveAdminEmailId = req.body.emailId;
     let ticketId = req.body.ticket.ticketId;
     let ticketNo = req.body.ticket.ticketNo;
@@ -69,7 +70,7 @@ module.exports = app => {
         } else {
           involveAdmin(user, ticketId, req.emailidFROMTOKEN)
             .then(admin => {
-              res.json(responseObj(null, 'Admin involved', 200, admin.getPublicFiels()));
+              res.json(responseObj(null, 'Admin involved', 200, admin.getPublicFields()));
               assignedMail(ticketNo, involveAdminEmailId, req.nameFROMTOKEN, req.emailidFROMTOKEN);
             })
             .catch(error => {
@@ -79,6 +80,7 @@ module.exports = app => {
                 res.status(400).json(responseObj('Reqester not involved in the ticket so cannot ask for assistance', 'Admin could not be invloved', 500, null));
               else
                 res.status(500).json(responseObj(error, 'Admin could not be invloved', 500, null));
+              
             })
         }
       })
@@ -100,6 +102,24 @@ module.exports = app => {
       })
       .catch(error => {
         res.status(500).json(responseObj(error, 'Error in getting tickets', 500, null));
+      })
+  })
+
+  app.get('/alladmin', isLoggedIn, isAdmin, (req,res) => {
+
+    findAdmins()
+      .then( admins => {
+        
+        let a = admins.filter( (val, ind) => {
+          return (val.emailId != req.emailidFROMTOKEN);
+        })
+        if(a.length == 0)
+          res.json(responseObj(null, 'No other admins found except for requester', 404, null));
+        else
+          res.json(responseObj(null, 'Array of all admins', 200, a));
+      })
+      .catch(error => {
+        res.status(500).json(responseObj(error, 'Error in getting admins', 500, null));
       })
   })
 

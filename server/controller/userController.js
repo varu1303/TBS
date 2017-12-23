@@ -80,6 +80,10 @@ module.exports = {
             reject(error);
           })
       })      
+    },
+
+    findAdmins: () => {
+      return User.find({ admin: true }).select({ "name": 1, "emailId": 1});
     }
 
 

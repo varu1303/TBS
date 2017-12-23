@@ -137,6 +137,7 @@ nav ul li a:active {
 @media only screen and (min-width: 768px) {
   .stretch a {
     width: max-content;
+    width: -moz-max-content;
   }
 }
 
