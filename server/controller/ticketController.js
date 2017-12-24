@@ -32,6 +32,8 @@ module.exports = {
 
   changeTicketStatus: (ticket, open) => {
     ticket.status = open;
+    if(open)
+      ticket.rating = null;
     return ticket.save();
   },
 

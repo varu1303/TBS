@@ -319,7 +319,7 @@ module.exports = app => {
             return 404;
           } else {
             if (ticket.status) {
-              return(400);
+              return(422);
             } else if(ticket.raisedBy.emailId == req.emailidFROMTOKEN) {
               return giveRating(ticket, rating);
             } else {
@@ -328,8 +328,8 @@ module.exports = app => {
           }
         })
         .then(ticket => {
-          if (ticket == 400) 
-            res.status(404).json(responseObj(null, 'Ticket is open cannot give rating', 400, null));
+          if (ticket == 422) 
+            res.status(422).json(responseObj(null, 'Ticket is open rating not processed', 422, null));
           else if(ticket == 404)
             res.status(404).json(responseObj(null, 'Ticket not present in DB', 404, null));
           else if(ticket == 401)
