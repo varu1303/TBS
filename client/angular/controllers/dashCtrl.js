@@ -14,6 +14,7 @@ function dashController($rootScope, tokenService, httpRequest, timestamp, $locat
   dc.allOpenTicket = 0;
   dc.allTicketRaised = [];
   dc.limit = 15;
+  dc.showStatus = 'all';
 
   dc.loadMore = function () {
     dc.limit += 15;

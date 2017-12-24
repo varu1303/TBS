@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="row row-border">
-        <h2 class="col-xs-12">ALL THE ASSIGNED TICKETS</h2>
+        <h2 class="col-xs-12">ASSIGNED TICKETS</h2>
       </div>
       <!-- <div id="tickData" class="row row-border" ng-repeat="ticket in Me.assignedTickets | reverse">
           <div class="col-xs-12 col-sm-8">
@@ -50,7 +50,17 @@
             <p class="tickView" ng-click="Me.viewTicket(ticket._id)">VIEW</p>
           </div>
       </div> -->
-      <div class="row tick_row" ng-repeat="ticket in Me.assignedTickets  | reverse">
+
+      <div class="selectDiv">
+      <label for="statusSelect"> SHOW </label>&nbsp; &nbsp;
+      <select name="statusSelect" ng-model="Ticket.showStatus" ng-init="Ticket.showStatus= 'all'">
+        <option value="all">ALL</option>
+        <option value="open">OPEN</option>
+        <option value="close">CLOSE</option>
+      </select><br>
+      </div>
+
+      <div class="row tick_row" ng-repeat="ticket in Me.assignedTickets  | reverse | status:Ticket.showStatus">
         <div class="col-xs-12 ticket_box">
           <div class="flex_contain">
             <p class="flex_describe">
@@ -121,7 +131,7 @@
         </div>
       </div>
       <div class="row row-border">
-        <h2 class="col-xs-12">ALL THE RAISED TICKETS</h2>
+        <h2 class="col-xs-12">RAISED TICKETS</h2>
       </div>
       <!-- <div id="tickData" class="row row-border" ng-repeat="ticket in Me.raisedTickets | reverse">
           <div class="col-xs-12 col-sm-8">
@@ -143,7 +153,15 @@
             <p class="tickView" ng-click="Me.viewTicket(ticket._id)">VIEW</p>
           </div>
       </div>  -->
-      <div class="row tick_row" ng-repeat="ticket in Me.raisedTickets  | reverse">
+      <div class="selectDiv">
+      <label for="statusSelect"> SHOW </label>&nbsp; &nbsp;
+      <select name="singleSelect" ng-model="Ticket.showStatus" ng-init="Ticket.showStatus= 'all'">
+        <option value="all">ALL</option>
+        <option value="open">OPEN</option>
+        <option value="close">CLOSE</option>
+      </select><br>
+      </div>
+      <div class="row tick_row" ng-repeat="ticket in Me.raisedTickets  | reverse | status:Ticket.showStatus">
         <div class="col-xs-12 ticket_box">
           <div class="flex_contain">
             <p class="flex_describe">

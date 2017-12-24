@@ -85,7 +85,10 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
         })
         .catch( res => {
           tc.tickError = true;
-          tc.errText = 'Error in adding comment, Try later';
+          if(res.data.status == 422)
+            tc.errText = 'Ticket Closed, cannot add comment.';
+          else
+            tc.errText = 'Error in adding comment, Try later';
           $timeout( function() {
             $route.reload();
           }, 2000);
@@ -117,7 +120,10 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
         })
         .catch (res => {
           tc.tickError = true;
-          tc.errText = 'Error in adding closing comment, Try later';
+          if(res.data.status == 422)
+            tc.errText = 'Ticket already closed';
+          else
+            tc.errText = 'Error in closing ticket, Try later';
           $timeout( function() {
             $route.reload();
           }, 2000);
@@ -152,7 +158,10 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
         })
         .catch (res => {
           tc.tickError = true;
-          tc.errText = 'Error in reopening ticket, Try Later';
+          if (res.data.status == 422)
+            tc.errText = 'Ticket already open, REFRESHING PAGE!';  
+          else
+            tc.errText = 'Error in reopening ticket, Try Later';
           $timeout( function() {
             $route.reload();
           }, 2000);
@@ -173,7 +182,10 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
       })
       .catch( res => {
         tc.tickError = true;
-        tc.errText = 'Error in giving rating, Try Later';
+        if(res.data.status == 422)
+          tc.errText = 'Cannot rate an open ticket';
+        else
+          tc.errText = 'Error in giving rating, Try Later';  
         $timeout( function() {
           $route.reload();
         }, 2000);
@@ -188,6 +200,7 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
       })
       .catch ( res => {
         tc.tickError = true;
+
         tc.errText = 'Error in getting admins, Try Later';
         $timeout( function() {
           $route.reload();
@@ -249,7 +262,10 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
         })
         .catch( res => {
           tc.tickError = true;
-          tc.errText = 'error in adding involvement request in comments';
+          if(res.data.status == 422)
+            tc.errText = 'Ticket is close cannot involve admins';
+          else 
+            tc.errText = 'Error in completing request, try later';
           $timeout( function() {
             $route.reload();
           }, 2000);

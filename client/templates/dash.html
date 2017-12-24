@@ -8,8 +8,17 @@
     </div>
   </div>
 
+  <div class="selectDiv">
+  <label for="statusSelect"> SHOW </label>&nbsp; &nbsp;
+  <select name="statusSelect" ng-model="Dash.showStatus" ng-init="Dash.showStatus= 'all'">
+    <option value="all">ALL</option>
+    <option value="open">OPEN</option>
+    <option value="close">CLOSE</option>
+  </select><br>
+  </div>
+
   
-  <div class="row tick_row" ng-repeat="ticket in Dash.allTicketRaised | reverse | limitTo: Dash.limit">
+  <div class="row tick_row" ng-repeat="ticket in Dash.allTicketRaised | reverse | status:Dash.showStatus | limitTo: Dash.limit ">
     <div class="col-xs-12 ticket_box">
       <div class="flex_contain">
         <p class="flex_describe">

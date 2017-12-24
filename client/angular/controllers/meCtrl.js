@@ -26,6 +26,7 @@ function meController($rootScope, tokenService, httpRequest, $location, timestam
   mc.getTicketError = false;
   mc.newPass = '';
   mc.conNewPass = '';
+  mc.showStatus = 'all';
 
   mc.changePass = function (invalid) {
     mc.changeDone = true;

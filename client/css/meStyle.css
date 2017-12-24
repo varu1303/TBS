@@ -154,6 +154,10 @@ h2 {
   color: #FFF;
 }
 
+.selectDiv {
+  padding: 1rem;
+  text-align: center;
+}
 
 @keyframes shake {
   10%, 90% { transform: translate3d(-1px,0,0); }
