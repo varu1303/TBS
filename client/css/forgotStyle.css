@@ -61,6 +61,34 @@
   transform: scale(1);
 }
 
+
+.sendMessage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90%;
+  background-color: #18BC9C;
+  display: flex;
+}
+
+.sendMessage p {
+  margin: auto;
+  color: #FFF;
+  text-align: center;
+}
+
+#toHome:link, #toHome:visited {
+  padding: 3rem;
+  text-decoration: none;
+  color: #FFF;
+}
+
+#toHome:hover, #toHome:active {
+  color: #18BC9C;
+  background-color: #FFF;
+}
+
 @media only screen and (max-width: 767px) {
   .email_container p {
     width: 100%;

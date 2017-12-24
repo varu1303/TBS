@@ -87,6 +87,8 @@ module.exports = {
         .then(ticket => {
           if(!ticket) {
             reject(404);
+          } else if(!ticket.status) {
+            reject(422);
           } else {
             let requesterInvolved = false;
             let involved = false;

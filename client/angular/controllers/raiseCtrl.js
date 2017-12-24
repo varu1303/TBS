@@ -1,7 +1,7 @@
 angular.module('edApp')
 .controller('raiseController', raiseController);
 
-function raiseController($rootScope, tokenService, httpRequest) {
+function raiseController($rootScope, tokenService, httpRequest, $timeout) {
 
   $rootScope.notLogged = false;
 
@@ -13,6 +13,7 @@ function raiseController($rootScope, tokenService, httpRequest) {
 
   rc.tickAttempt = false;
   rc.tickRaised = false;
+  rc.tickRaiseFail = false;
   rc.tickTitle = '';
   rc.tickDescription = '';
 
@@ -28,11 +29,17 @@ function raiseController($rootScope, tokenService, httpRequest) {
         .then(res => {
           rc.tickTitle = '';
           rc.tickDescription = '';
+          rc.tickRaiseFail = false;
           rc.tickRaised = true;
-          console.log(res);
+          $timeout( function () {
+            rc.tickRaised = false;
+          }, 4000);
         })
         .catch(res => {
-          console.log('error ', res);
+          rc.tickRaiseFail = true;
+          $timeout( function () {
+            rc.tickRaiseFail = false;
+          }, 5000);
         })
     }
   }

@@ -4,11 +4,20 @@
     <form name="forgot_form" ng-submit="Forgot.forgotSubmit(forgot_form.$invalid)" novalidate>
     <p>
         <input type="email" placeholder="Email ID" name="email" ng-model="Forgot.emailId" required>
-        <button type="submit">SUBMIT</button>
+        <button type="submit">{{Forgot.btn_text}}</button>
     </p>
     </form>
-    <div  ng-show="Forgot.forgetSubmit && forgot_form.$invalid" class="alert alert-warning">
+    <div  ng-show="Forgot.forgetSubmit && forgot_form.$invalid" class="alert alert-warning" style="margin-bottom: 8px;">
         Enter a valid Email Id!
+    </div>
+    <div ng-show="Forgot.passReqRes" class="sendMessage">
+      <p><i class="fa fa-info-circle fa" aria-hidden="true"></i> {{Forgot.sendStatus}} 
+      <br> 
+      <br>
+      <br>
+      <br>
+      <a id="toHome" ng-show="Forgot.canLogin" href="/"><i class="fa fa-reply" aria-hidden="true"></i> LOGIN</a>
+    </p>
     </div>
   </div>
 </div>

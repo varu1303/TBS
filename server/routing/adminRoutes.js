@@ -76,6 +76,8 @@ module.exports = app => {
             .catch(error => {
               if(error == 404)
                 res.status(404).json(responseObj('Ticket not found in DB', 'Admin could not be invloved', 500, null));
+              else if(error == 422)
+                res.status(422).json(responseObj('Ticket already closed cannot involve anyone', 'Admin could not be invloved', 422, null));
               else if (error == 400)
                 res.status(400).json(responseObj('Reqester not involved in the ticket so cannot ask for assistance', 'Admin could not be invloved', 500, null));
               else

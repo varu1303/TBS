@@ -1,7 +1,7 @@
 angular.module('edApp')
 .controller('ticketController', ticketController);
 
-function ticketController($rootScope, tokenService, httpRequest, $routeParams, timestamp, $route) {
+function ticketController($rootScope, tokenService, httpRequest, $routeParams, timestamp, $route, $timeout) {
 
   $rootScope.notLogged = false;
   
@@ -28,6 +28,11 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
   tc.involveSub = false;
   tc.tobeInvolved = [];
 
+  tc.getTickDetailError = false;
+  
+  tc.tickError = false;
+  tc.errText = '';
+
 
   if (tc.isAdmin) {
     httpRequest.viewAdminsTicket(tc.tId)
@@ -40,7 +45,7 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
       })
     })
     .catch(res => {
-      console.log(res);
+      tc.getTickDetailError = true;
     })
   } else {
     httpRequest.viewUsersTicket(tc.tId)
@@ -52,7 +57,7 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
         })
       })
       .catch(res => {
-        console.log(res);
+        tc.getTickDetailError = true;
       })
   }
 
@@ -74,11 +79,16 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
               })
             })
             .catch (res => {
-              console.log('get error ', res);
+              // IF error in getting updated commetns just reloading the whole route to get new comments
+              $route.reload();
             })
         })
         .catch( res => {
-          console.log('error ',res);
+          tc.tickError = true;
+          tc.errText = 'Error in adding comment, Try later';
+          $timeout( function() {
+            $route.reload();
+          }, 2000);
         })
     }
     
@@ -98,11 +108,19 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
               $route.reload();              
             })
             .catch (res => {
-              console.log('error ', res);
+              tc.tickError = true;
+              tc.errText = 'Error in closing ticket, Try later';
+              $timeout( function() {
+                $route.reload();
+              }, 2000);
             })
         })
         .catch (res => {
-          console.log('error ', res);
+          tc.tickError = true;
+          tc.errText = 'Error in adding closing comment, Try later';
+          $timeout( function() {
+            $route.reload();
+          }, 2000);
         })
 
       tc.closeSub = false;
@@ -125,11 +143,19 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
               $route.reload();              
             })
             .catch (res => {
-              console.log('error ', res);
+              tc.tickError = true;
+              tc.errText = 'Error in adding reopening comment';
+              $timeout( function() {
+                $route.reload();
+              }, 2000);
             })
         })
         .catch (res => {
-          console.log('error ', res);
+          tc.tickError = true;
+          tc.errText = 'Error in reopening ticket, Try Later';
+          $timeout( function() {
+            $route.reload();
+          }, 2000);
         })
 
 
@@ -146,7 +172,11 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
         $route.reload();       
       })
       .catch( res => {
-        console.log('error ', res);
+        tc.tickError = true;
+        tc.errText = 'Error in giving rating, Try Later';
+        $timeout( function() {
+          $route.reload();
+        }, 2000);
       })
   }
 
@@ -157,7 +187,11 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
         tc.admins = res.data.data;
       })
       .catch ( res => {
-        console.log('error ', res);
+        tc.tickError = true;
+        tc.errText = 'Error in getting admins, Try Later';
+        $timeout( function() {
+          $route.reload();
+        }, 2000);
       })
   }
 
@@ -168,7 +202,6 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
     else 
       tc.tobeInvolved.pop(adminEmail);
     
-    console.log(tc.tobeInvolved);
   }
 
   tc.involvedAdmin = email => {
@@ -204,15 +237,22 @@ function ticketController($rootScope, tokenService, httpRequest, $routeParams, t
 
           Promise.all(involvePromises)
             .then(values => { 
-              console.log('got them involved ', values); 
               $route.reload();
             })
             .catch(error => {
-              console.log('all error ', error);
+              tc.tickError = true;
+              tc.errText = 'error in involving admins';
+              $timeout( function() {
+                $route.reload();
+              }, 2000);
             })
         })
         .catch( res => {
-          console.log('error in adding comment ',res);
+          tc.tickError = true;
+          tc.errText = 'error in adding involvement request in comments';
+          $timeout( function() {
+            $route.reload();
+          }, 2000);
         })
     }
   }

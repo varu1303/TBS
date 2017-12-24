@@ -13,7 +13,16 @@
           <div  ng-show="(log_form.email.$error.required || log_form.password.$error.required) && Sign.subDone" class="alert alert-warning">
               Email ID and Password are required!
           </div>
-          <p><button type="submit">LOGIN</button></p>
+          <div  ng-show="Sign.login_emailNotFound" class="alert alert-warning">
+              Email ID not registered!
+          </div>
+          <div  ng-show="Sign.login_incorrectPassword" class="alert alert-warning">
+              Incorrect Password!
+          </div>
+          <div  ng-show="Sign.login_serverError" class="alert alert-warning">
+              Server Error, Try later!
+          </div>
+          <p><button type="submit">{{Sign.logbtn_text}}</button></p>
         </form>
         <p><a href="/forgotPass">FORGOT PASSWORD?</a></p>
       </div>
@@ -45,8 +54,23 @@
                           register_form.conPass.$error.required) && Sign.regDone" class="alert alert-warning">
               All fields are mandatory!
           </div>
-          <p><button type="submit">REGISTER</button></p>
+          <div ng-show="Sign.notValidPhone" class="alert alert-warning">
+            Enter a valid Phone Number!
+          </div>          
+          <div ng-show="Sign.EmailorPhoneTaken" class="alert alert-warning">
+            Email ID or Phone number already registerd!
+          </div>
+          <p><button type="submit">{{Sign.regbtn_text}}</button></p>
         </form>
+
+        <div class="reg_success" ng-show="Sign.regSuccess">
+          <div class="reg_succbox">
+            <p>WELCOME! to edDesk.</p>
+            <p>You've successfully registered, you can go ahead and LOGIN now.</p>
+            <br>
+            <p><i class="fa fa-check fa-3x" aria-hidden="true"></i></p>
+          </div>
+        </div>
       </div>
     </div>
 

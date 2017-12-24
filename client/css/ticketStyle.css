@@ -348,6 +348,21 @@
 #gap {
   margin-top: 2rem;
 }
+
+#errbox {
+  width: 90%;
+  height: 90%;
+  margin: 0 auto;
+  display: flex;
+}
+
+#errbox p {
+  margin: auto;
+  text-align: center;
+  color: #2C3E50;
+  font-weight: bolder;
+}
+
 @media only screen and (max-width: 767px) {
 
   .flexTick .tickSumm {

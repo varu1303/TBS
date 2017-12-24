@@ -15,7 +15,7 @@
         </div>
         <div class="col-xs-3 hidden-sm hidden-md hidden-lg"></div>
         <div class="col-xs-6 col-sm-2">
-          <p class="icons" ng-click="Me.unlock()"><i class="fa fa-unlock" aria-hidden="true"></i></p>
+          <p class="iconPass" ng-click="Me.unlock()"><i class="fa fa-unlock" aria-hidden="true"></i></p>
         </div>
         <div class="col-xs-3 hidden-sm hidden-md hidden-lg"></div>
       </div>
@@ -82,7 +82,11 @@
           <div class="col-xs-12">
               <p class="icons">NO TICKETS HAVE BEEN ASSIGNED</p>
           </div>
-      </div>  
+      </div> 
+      
+      <div ng-show="Me.getTicketError" class="alert alert-warning">
+          Error in getting tickets, Come back Later!
+      </div>
     </div>
   </div>
 </div>
@@ -104,7 +108,7 @@
         </div>
         <div class="col-xs-3 hidden-sm hidden-md hidden-lg"></div>
         <div class="col-xs-6 col-sm-2">
-          <p class="icons" ng-click="Me.unlock()"><i class="fa fa-unlock" aria-hidden="true"></i></p>
+          <p class="iconPass" ng-click="Me.unlock()"><i class="fa fa-unlock" aria-hidden="true"></i></p>
         </div>
         <div class="col-xs-3 hidden-sm hidden-md hidden-lg"></div>
       </div>
@@ -170,9 +174,13 @@
 
       <div class="row row-border" ng-show="Me.raisedTickets.length == 0">
         <div class="col-xs-12">
-            <p class="icons">YOU HAVE NOT RAISED ANY TICKETS</p>
+          <p class="icons">YOU HAVE NOT RAISED ANY TICKETS</p>
         </div>
       </div> 
+
+      <div ng-show="Me.getTicketError" class="alert alert-warning">
+          Error in getting tickets, Come back Later!
+      </div>
     </div>
   </div>
 </div>
@@ -181,7 +189,7 @@
     <div id="close" ng-click="Me.unlock()">
       <i class="fa fa-times fa-2x" aria-hidden="true"></i>
     </div>
-    <form name="changePass_form" ng-submit="Me.changePass()" novalidate>
+    <form name="changePass_form" ng-submit="Me.changePass(changePass_form.$invalid)" novalidate>
       <p class="changeP">
         <input type="password" placeholder="Password" name="changePass" ng-model="Me.newPass" ng-minlength="6" ng-maxlength="10" required>
       </p>
@@ -203,6 +211,12 @@
         <div class="pClass">
           <p><i class="fa fa-thumbs-up fa-3x" aria-hidden="true"></i></p>
           <p>Done!</p>
+        </div>
+      </div>
+      <div id="resetDone" ng-show="Me.failReset">
+        <div class="pClass">
+          <p><i class="fa fa-thumbs-down fa-3x" aria-hidden="true"></i></p>
+          <p>Server Error, Try Later!</p>
         </div>
       </div>
     </form>

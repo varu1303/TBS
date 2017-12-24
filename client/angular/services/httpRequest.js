@@ -12,6 +12,10 @@ function httpRequest($http, tokenService) {
     return $http.post('/login', { userCredentials })
   }
 
+  this.forgotPassword = function (emailId) {
+    return $http.post('/forgotpassword', { emailId })
+  }
+
   this.getAssignedTicket = function () {
     return $http.get('/admin/assignedTickets',{
         headers: {'x-auth' : tokenService.getToken()

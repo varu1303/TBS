@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { check, validationResult } = require('express-validator/check');
 //
 const {responseObj} = require('./../config/response');
 //Controller functions
@@ -30,20 +31,43 @@ module.exports = app => {
          
         
 
-  app.post('/signup', createHash, (req, res) => {
-    let userDetails = req.body.userDetails;
-    userDetails.password = req.hash;
-    saveUser(userDetails)
-      .then((user) => {
-        res.json(responseObj(null,'Sign up successful',200,user.getPublicFields()));
-      })
-      .catch((error) => {
-        res.status(400).json(responseObj(error,'Sign up failed',400,null));
-      })
+  app.post('/signup',  [
+    check('userDetails.emailId')
+      .isEmail().withMessage('must be an email')
+      .trim(),
+  
+    check('userDetails.password', 'passwords must be 6 to 10 chars long')
+      .isLength({ min: 6, max: 10 })
+      .trim(),
+    
+    check('userDetails.phoneNumber', 'Phone number must be a valid Indian Mobile Number')
+      .isMobilePhone("en-IN"),
+
+    check('userDetails.name').exists()
+
+  ], createHash, (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json(responseObj(errors.mapped(), 'SERVER VALIDATION FAILED', 422, null));
+    } else {
+      let userDetails = req.body.userDetails;
+      userDetails.emailId = userDetails.emailId.toLowerCase();
+      userDetails.password = req.hash;
+      saveUser(userDetails)
+        .then((user) => {
+          res.json(responseObj(null,'Sign up successful',200,user.getPublicFields()));
+        })
+        .catch((error) => {
+          res.status(400).json(responseObj(error,'Sign up failed',400,null));
+        })
+    }
+
   })
 
   app.post('/login', (req,res) => {
     let userCredentials = req.body.userCredentials;
+    userCredentials.emailId = userCredentials.emailId.toLowerCase();
     if(!userCredentials.emailId)
       res.status(400).json(responseObj(null,'Email ID not provided',400,null));
     else {
@@ -200,28 +224,22 @@ module.exports = app => {
           if(!ticket) {
             return 404;
           } else {
-            if(ticket.raisedBy.emailId == req.emailidFROMTOKEN ) {  
-              return changeTicketStatus(ticket, open);
-            } else if(req.isAdminFROMTOKEN) {
-              let involved = 0;
-              ticket.involvedAdmins.forEach((val, i) => {
-                if(val.emailId == req.emailidFROMTOKEN)
-                  involved = 1;
-              })
-              if(!involved) {
-                // res.status(401).json(responseObj(null,'Not authorised to change status not an involved Admin',401,null));
-                return 401;        
-              } else {
-                return changeTicketStatus(ticket, open);
-              }
+            if(open && ticket.status) {
+              return 422;
             } else {
-              return 401;    
+              if(ticket.raisedBy.emailId == req.emailidFROMTOKEN || req.isAdminFROMTOKEN ) {  
+                return changeTicketStatus(ticket, open);
+              } else {
+                return 401;    
+              }
             }
           }
         })
         .then(ticket => {
           if(ticket == 404)
             res.status(404).json(responseObj(null, 'Ticket not present in DB', 404, null))
+          else if(ticket == 422) 
+            res.status(422).json(responseObj('Already open, cannot open again', 'Ticket not opened', 422, null));
           else if(ticket == 401)
             res.status(401).json(responseObj(null,'Not authorised to change status either has to be owner of that ticket or an involved Admin',401,null));
           else {

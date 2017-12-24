@@ -1,5 +1,5 @@
 .dash_box {
-  min-height: 80vh;
+  min-height: 101vh;
 }
 
 .tick_row {
@@ -64,6 +64,11 @@
 
 .dToView {
   background-color: #18BC9C;
+  transition: transform .1s ease-in-out;
+}
+
+.dToView:hover {
+  transform: translateY(-2px);
 }
 
 .op {

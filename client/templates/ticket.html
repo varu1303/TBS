@@ -1,4 +1,7 @@
-<div class="container tickDetail-box">
+<div  ng-show="Ticket.getTickDetailError" class="alert alert-warning">
+    Error in getting ticket details, Try Later!
+</div>
+<div class="container tickDetail-box" ng-show="!Ticket.getTickDetailError">
   <div class="row">
     <div class="col-xs-12 flexTick">
       <div class="tickSumm">
@@ -40,7 +43,7 @@
           <li data-toggle="tooltip" title="CLOSE TICKET" ng-show="Ticket.this.status" ng-click="Ticket.closePopup = true">
             <i class="fa fa-window-close" aria-hidden="true"></i>
           </li>
-          <li data-toggle="tooltip" title="REOPEN TICKET" ng-show="!Ticket.this.status && !isAdmin" ng-click="Ticket.reopenPopup = true">
+          <li data-toggle="tooltip" title="REOPEN TICKET" ng-show="!Ticket.this.status" ng-click="Ticket.reopenPopup = true">
             <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
           </li>
           <li data-toggle="tooltip" title="INVOLVE OTHER ADMIN"  ng-show="Ticket.this.status && isAdmin" ng-click="Ticket.involve()">
@@ -150,6 +153,15 @@
           <i class="fa fa-times fa-2x" aria-hidden="true"></i>
         </div>
       </div>
+    </div>
+
+    <!-- ADD comment error pop up -->
+    <div class="popups" ng-show="Ticket.tickError">
+        <div class="center_pop">
+          <div id="errbox">
+            <p>{{Ticket.errText}}</p>
+        </div>
+        </div>    
     </div>
 
   <!-- <div class="row chat_head"> -->

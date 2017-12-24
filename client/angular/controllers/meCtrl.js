@@ -22,24 +22,29 @@ function meController($rootScope, tokenService, httpRequest, $location, timestam
   mc.changeDone = false;
   mc.changeNoMatch = false;
   mc.successReset = false;
+  mc.failReset = false;
+  mc.getTicketError = false;
   mc.newPass = '';
   mc.conNewPass = '';
 
-  mc.changePass = function () {
+  mc.changePass = function (invalid) {
     mc.changeDone = true;
-    if( mc.newPass != mc.conNewPass)
-      mc.changeNoMatch = true;
-    else {
-      mc.changeDone = false;
-      httpRequest.changePass(mc.newPass)
-        .then(res => {
-          mc.successReset = true;
-          console.log('changed');
-        })
-        .catch(res => {
-          console.log('error');
-        })
+    if(!invalid) {
+      if( mc.newPass != mc.conNewPass)
+        mc.changeNoMatch = true;
+      else {
+        mc.changeDone = false;
+        httpRequest.changePass(mc.newPass)
+          .then(res => {
+            mc.failReset = false;;
+            mc.successReset = true;
+          })
+          .catch(res => {
+            mc.failReset = true;
+          })
+      }
     }
+
 
   }
 
@@ -68,7 +73,7 @@ function meController($rootScope, tokenService, httpRequest, $location, timestam
 
       })
       .catch(res => {
-        console.log('error ', res);
+        mc.getTicketError = true;
       })
   } else {
     httpRequest.getRaisedTicket()
@@ -83,7 +88,7 @@ function meController($rootScope, tokenService, httpRequest, $location, timestam
         })
       })
       .catch(res => {
-        console.log('error ', res);
+        mc.getTicketError = true;
       })
   }
 

@@ -3,7 +3,7 @@ const secret = require('./../../config/secret');
 
 module.exports = {
   generateJWT: payload => {
-    return jwt.sign( { data: payload }, secret, { expiresIn: 60 * 60 } );
+    return jwt.sign( { data: payload }, secret);
   },
 
   extractJWT: req => req.get('x-auth'),

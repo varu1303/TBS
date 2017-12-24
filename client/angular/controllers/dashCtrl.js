@@ -10,7 +10,9 @@ function dashController($rootScope, tokenService, httpRequest, timestamp, $locat
   $rootScope.isAdmin = payload.data.admin;
 
   let dc= this;
+  dc.allTicketGetError = false;
   dc.allOpenTicket = 0;
+  dc.allTicketRaised = [];
   dc.limit = 15;
 
   dc.loadMore = function () {
@@ -33,7 +35,7 @@ function dashController($rootScope, tokenService, httpRequest, timestamp, $locat
       })
     })
     .catch(res => {
-      console.log('error', res);
+      dc.allTicketGetError = true;
     })
 
 

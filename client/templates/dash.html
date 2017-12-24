@@ -1,5 +1,5 @@
 <div class="container dash_box">
-  <div class="row">
+  <div class="row" ng-show="!Dash.allTicketGetError">
     <div class="col-xs-12 col-sm-6">
       <p class="icons">TOTAL TICKETS: {{Dash.allRaisedTicket}}</p>
     </div>
@@ -50,6 +50,10 @@
     <div class="hidden-xs col-sm-2">
       &nbsp;
     </div>
+  </div>
+
+  <div ng-show="Dash.allTicketGetError" class="alert alert-warning">
+      Error in getting tickets, Come back Later!
   </div>
 </div>
 
