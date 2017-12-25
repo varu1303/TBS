@@ -363,6 +363,13 @@
   font-weight: bolder;
 }
 
+.icon_move {
+  transition: transform .1s ease-in-out;
+}
+
+.icon_move:hover {
+  transform: translateY(-2px);
+}
 @media only screen and (max-width: 767px) {
 
   .flexTick .tickSumm {

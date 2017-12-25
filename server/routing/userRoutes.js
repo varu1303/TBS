@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const { check, validationResult } = require('express-validator/check');
 //
 const {responseObj} = require('./../config/response');
+const {prodUser} = require('./../config/adminRightsTo');
 //Controller functions
 const {saveUser, loginUser, updPassword, refRaisedTicket, getRaisedTicket} = require('./../controller/userController');
 const {saveTicket, findTicket, changeTicketStatus, postComment, getTicketCount, giveRating} = require('./../controller/ticketController');
@@ -52,8 +53,15 @@ module.exports = app => {
       return res.status(422).json(responseObj(errors.mapped(), 'SERVER VALIDATION FAILED', 422, null));
     } else {
       let userDetails = req.body.userDetails;
-      userDetails.emailId = userDetails.emailId.toLowerCase();
       userDetails.password = req.hash;
+
+      userDetails.emailId = userDetails.emailId.toLowerCase();
+      let emailDomain = userDetails.emailId.split("@")[1];
+      if(emailDomain == prodUser)
+        userDetails.admin = true;
+      else
+        userDetails.admin = false;
+      
       saveUser(userDetails)
         .then((user) => {
           res.json(responseObj(null,'Sign up successful',200,user.getPublicFields()));

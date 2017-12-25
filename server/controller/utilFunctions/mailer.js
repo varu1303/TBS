@@ -16,7 +16,7 @@ module.exports = {
   sendPassMail: (email, newpass) => {
   
     return new Promise((resolve, reject) => {
-        let text = `Hey! Your new PASSWORD is : ${newpass}. Look for the lock icon in 'YOUR PROFILE' to change password!` 
+        let text = `Hey! Your new PASSWORD is : ${newpass}. You can change your password from your home page (unlock symbol)!` 
         let mailOptions = {
                 from: emailId, // sender address
                 to: email, // list of receivers
@@ -67,7 +67,7 @@ module.exports = {
       })      
     }
 
-    if (to.length != 0) {
+    if (!to.length) {
       let mailOptions = {
         from: emailId, // sender address
         to: to, // list of receivers
@@ -97,7 +97,7 @@ module.exports = {
       })      
     }
 
-    if(to.length != 0) {
+    if(!to.length) {
       let mailOptions = {
         from: emailId, // sender address
         to: to, // list of receivers
@@ -105,7 +105,7 @@ module.exports = {
         text: text 
       };
   
-      // transporter.sendMail(mailOptions); 
+      transporter.sendMail(mailOptions); 
     }
 
    
@@ -123,7 +123,7 @@ module.exports = {
       text: text 
     };
 
-    // transporter.sendMail(mailOptions);    
+    transporter.sendMail(mailOptions);    
   }
 
 }

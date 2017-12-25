@@ -8,7 +8,8 @@ module.exports = {
       name: u.name,
       emailId: u.emailId,
       phoneNumber: u.phoneNumber,
-      password: u.password
+      password: u.password,
+      admin: u.admin
     })
 
     return user.save();

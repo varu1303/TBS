@@ -40,16 +40,16 @@
       <!-- ICONS FOR OTHER FUNCTIONALITIES -->
       <div id="tick_functions">
         <ul id="tick_fun_list">
-          <li data-toggle="tooltip" title="CLOSE TICKET" ng-show="Ticket.this.status" ng-click="Ticket.closePopup = true">
+          <li class="icon_move" data-toggle="tooltip" title="CLOSE TICKET" ng-show="Ticket.this.status" ng-click="Ticket.closePopup = true">
             <i class="fa fa-window-close" aria-hidden="true"></i>
           </li>
-          <li data-toggle="tooltip" title="REOPEN TICKET" ng-show="!Ticket.this.status" ng-click="Ticket.reopenPopup = true">
+          <li class="icon_move" data-toggle="tooltip" title="REOPEN TICKET" ng-show="!Ticket.this.status" ng-click="Ticket.reopenPopup = true">
             <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
           </li>
-          <li data-toggle="tooltip" title="INVOLVE OTHER ADMIN"  ng-show="Ticket.this.status && isAdmin" ng-click="Ticket.involve()">
+          <li class="icon_move" data-toggle="tooltip" title="INVOLVE OTHER ADMIN"  ng-show="Ticket.this.status && isAdmin" ng-click="Ticket.involve()">
             <i class="fa fa-user-circle" aria-hidden="true"></i>
           </li>
-          <li data-toggle="tooltip" title="RATE YOUR EXPERIENCE"  ng-show="!Ticket.this.status && !isAdmin" ng-click="Ticket.ratePopup = true">
+          <li class="icon_move" data-toggle="tooltip" title="RATE YOUR EXPERIENCE"  ng-show="!Ticket.this.status && !isAdmin" ng-click="Ticket.ratePopup = true">
             <i class="fa fa-star-half-o" aria-hidden="true"></i>
           </li>  
         </ul>
