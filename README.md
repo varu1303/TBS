@@ -6,7 +6,15 @@ Mobile Number: 9873687230
 
 E-mail Id: varunrana13@gmail.com
 
-Ticket Based Support System!
+Steps to run it in local enviornment!
+
+1) npm install 
+2) Start a mongo server in local env
+3) Edit 'server/config/adminRightsTo.js' - to define who gets admin access. Read assumption below for details.
+4) Edit 'server/confilg/email-cred.js' - to be able to send email notifications through app
+5) node app.js
+
+## Ticket Based Support System!
 
 A SPA built to be used by any 'product owner' to resolve issues being faced by the product
 users.
@@ -17,7 +25,7 @@ Built to have a team of admins being able to work together in resolving tickets.
 *Admins can involve each other as required in a ticket.
 
 
-Assumptions - 
+## Assumptions - 
 
 1) ADMIN team will have a unique domain for e-mail addresses.
 
@@ -39,7 +47,7 @@ ADMIN rights.
 We set {prodUser : 'xyz.com'}
 
 
-Extra Features -
+## Extra Features -
 
 1) A Ticket can be reopened by Admins or the user to whom that ticket belongs to.
 
